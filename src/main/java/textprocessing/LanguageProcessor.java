@@ -1,8 +1,10 @@
 package textprocessing;
 
+import memory.Entity;
 import memory.KnowledgeBase;
 
 import java.util.List;
+import java.util.Optional;
 
 public class LanguageProcessor {
 
@@ -20,6 +22,13 @@ public class LanguageProcessor {
             return "Привет! Как я могу помочь?";
         }
 
-        return knowledgeBase.findAnswer(String.join(" ", tokens));
+        Optional<Entity> foundEntity = knowledgeBase.findEntity(input);
+        if (foundEntity.isPresent()) {
+            Entity entity = foundEntity.get();
+
+            return "Вот что я знаю о " + entity.getName() + ": " + entity.getProperties();
+        }
+
+        return "Я не знаю ответа на этот вопрос. Хотите добавить информацию об этом в базу знаний?";
     }
 }
