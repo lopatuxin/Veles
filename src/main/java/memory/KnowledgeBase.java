@@ -2,6 +2,7 @@ package memory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import textprocessing.TextTokenizer;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +40,20 @@ public class KnowledgeBase {
         return entities.stream()
                 .filter(entity -> entity.getName().equalsIgnoreCase(name))
                 .findFirst();
+    }
+
+    public List<Entity> findEntitiesByQuery(String query) {
+        List<String> tokens = new TextTokenizer().tokenize(query);
+
+        return entities.stream()
+                .filter(entity ->
+                        tokens.stream()
+                                .anyMatch(token ->
+                                        entity.getName().toLowerCase().contains(token) ||
+                                                entity.getType().toLowerCase().contains(token) ||
+                                                entity.getProperties().values().stream()
+                                                        .anyMatch(value -> value.toLowerCase().contains(token))))
+                .toList();
     }
 
     public void addEntity(String type, String name, Map<String, String> properties) {

@@ -4,31 +4,32 @@ import memory.Entity;
 import memory.KnowledgeBase;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class LanguageProcessor {
 
-    private final TextTokenizer textTokenizer;
-
-    public LanguageProcessor() {
-        this.textTokenizer = new TextTokenizer();
-    }
-
     public String process(String input, KnowledgeBase knowledgeBase) {
-
-        List<String> tokens = textTokenizer.tokenize(input);
 
         if (input.contains("привет")) {
             return "Привет! Как я могу помочь?";
         }
 
-        Optional<Entity> foundEntity = knowledgeBase.findEntity(input);
-        if (foundEntity.isPresent()) {
-            Entity entity = foundEntity.get();
-
-            return "Вот что я знаю о " + entity.getName() + ": " + entity.getProperties();
+        List<Entity> foundEntities = knowledgeBase.findEntitiesByQuery(input);
+        if (!foundEntities.isEmpty()) {
+            return formatEntitiesResponse(foundEntities);
         }
 
         return "Я не знаю ответа на этот вопрос. Хотите добавить информацию об этом в базу знаний?";
+    }
+
+    private String formatEntitiesResponse(List<Entity> entities) {
+        return entities.stream()
+                .map(entity -> "Тип: " + entity.getType() + "\n" +
+                        "Название: " + entity.getName() + "\n" +
+                        "Свойства:\n" +
+                        entity.getProperties().entrySet().stream()
+                                .map(entry -> entry.getKey() + ": " + entry.getValue())
+                                .collect(Collectors.joining("\n")))
+                .collect(Collectors.joining("\n\n"));
     }
 }
