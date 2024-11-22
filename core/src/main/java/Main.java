@@ -1,4 +1,4 @@
-package core;
+import core.AI;
 
 public class Main {
 
