@@ -1,17 +1,16 @@
 package memory.longtermmemory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import memory.Entity;
 
 import java.io.File;
 import java.io.IOException;
 
-public class JsonFileCreator implements FileCreator<Entity> {
+public class JsonFileCreator<T> implements FileCreator<T> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void createFile(String path, Entity content) throws IOException {
+    public void createFile(String path, T content) throws IOException {
         File file = new File(path);
 
         createParentDirectories(file);
