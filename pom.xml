@@ -13,6 +13,7 @@
         <module>memory</module>
         <module>textprocessing</module>
         <module>languageEngine</module>
+        <module>userInterface</module>
     </modules>
 
     <properties>
@@ -20,4 +21,19 @@
         <maven.compiler.target>22</maven.compiler.target>
         <maven.compiler.release>22</maven.compiler.release>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.12</version>
+        </dependency>
+    </dependencies>
+
 </project>
