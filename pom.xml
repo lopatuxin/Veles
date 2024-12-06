@@ -12,6 +12,7 @@
         <module>core</module>
         <module>memory</module>
         <module>textprocessing</module>
+        <module>languageEngine</module>
     </modules>
 
     <properties>
