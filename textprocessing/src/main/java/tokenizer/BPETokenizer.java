@@ -2,7 +2,7 @@ package tokenizer;
 
 import java.util.*;
 
-public class BPETokenizer {
+public class BPETokenizer implements Tokenizer {
 
     private final Map<String, Integer> vocab; // Словарь токенов
     private final int maxVocabSize; // Максимальный размер словаря
