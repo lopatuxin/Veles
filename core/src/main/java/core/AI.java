@@ -26,6 +26,7 @@ public class AI {
             String input = consoleHandler.readInput();
             List<String> tokens = tokenizer.tokenize(input);
             List<Entity> entities = repository.processTokens(tokens);
+            entities.forEach(System.out::println);
         }
     }
 }

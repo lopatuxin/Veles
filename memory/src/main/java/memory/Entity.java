@@ -23,6 +23,14 @@ public class Entity {
         return type;
     }
 
+    @Override
+    public String toString() {
+        return "Entity{" +
+                "type='" + type + '\'' +
+                ", connections=" + connections +
+                '}';
+    }
+
     public void addConnection(String connectionType, String targetType) {
         connections.computeIfAbsent(connectionType, k -> new ArrayList<>()).add(targetType);
     }
