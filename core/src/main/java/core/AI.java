@@ -1,7 +1,7 @@
 package core;
 
-import memory.KnowledgeBase;
-import textprocessing.LanguageProcessor;
+import memory.Entity;
+import memory.repository.Repository;
 import tokenizer.Tokenizer;
 import ui.ConsoleHandler;
 
@@ -9,16 +9,14 @@ import java.util.List;
 
 public class AI {
 
-    private final LanguageProcessor languageProcessor;
-    private final KnowledgeBase knowledgeBase;
     private final ConsoleHandler consoleHandler;
     private final Tokenizer tokenizer;
+    private final Repository<Entity> repository;
 
-    public AI(Tokenizer tokenizer) {
-        this.languageProcessor = new LanguageProcessor();
-        this.knowledgeBase = new KnowledgeBase();
+    public AI(Tokenizer tokenizer, Repository<Entity> repository) {
         this.consoleHandler = new ConsoleHandler();
         this.tokenizer = tokenizer;
+        this.repository = repository;
     }
 
     public void start() {
@@ -27,9 +25,7 @@ public class AI {
         while (true) {
             String input = consoleHandler.readInput();
             List<String> tokens = tokenizer.tokenize(input);
-
-            String response = languageProcessor.process(input, knowledgeBase);
-            consoleHandler.output(response);
+            List<Entity> entities = repository.processTokens(tokens);
         }
     }
 }

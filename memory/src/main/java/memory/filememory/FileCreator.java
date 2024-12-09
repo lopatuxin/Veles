@@ -1,4 +1,4 @@
-package memory.longtermmemory;
+package memory.filememory;
 
 import java.io.IOException;
 
