@@ -1,0 +1,28 @@
+/* Устанавливаем тёмный фон */
+.root {
+    -fx-background-color: #2b2b2b;
+}
+
+/* Стиль для TextArea */
+.text-area {
+    -fx-background-color: #3b3b3b; /* Светло-серый цвет */
+    -fx-text-fill: white;          /* Цвет текста */
+    -fx-prompt-text-fill: gray;    /* Цвет текста-подсказки */
+    -fx-border-color: #555555;    /* Цвет границы */
+}
+
+/* Кнопки */
+.button {
+    -fx-background-color: #555555;
+    -fx-text-fill: white;
+}
+
+/* При наведении */
+.button:hover {
+    -fx-background-color: #666666;
+}
+
+/* Фокус */
+.text-area:focused, .text-field:focused {
+    -fx-border-color: #6c7a89;
+}
