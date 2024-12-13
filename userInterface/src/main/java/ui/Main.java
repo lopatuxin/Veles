@@ -15,8 +15,12 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 public class Main extends Application {
+
+    UserInterfaceImpl uiImpl = new UserInterfaceImpl();
+
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
+        uiImpl.setMainApp(this);
         BorderPane root = new BorderPane();
 
         VBox chatArea = new VBox();
@@ -34,12 +38,9 @@ public class Main extends Application {
                 if (!userInput.isEmpty()) {
                     addMessage(chatArea, userInput, true); // Сообщение пользователя
                     inputArea.clear();
-
-                    // Генерация ответа Велеса (заглушка)
-                    String velesResponse = "Ответ Велеса на: " + userInput;
-                    addMessage(chatArea, velesResponse, false); // Сообщение Велеса
+                    uiImpl.setInput(userInput); // Уведомляем UserInterfaceImpl
                 }
-                event.consume(); // Убираем добавление новой строки
+                event.consume();
             }
         });
 
@@ -54,7 +55,7 @@ public class Main extends Application {
         stage.show();
     }
 
-    private void addMessage(VBox chatArea, String message, boolean isUser) {
+    public void addMessage(VBox chatArea, String message, boolean isUser) {
         // Создаем текстовое сообщение
         TextFlow messageBubble = new TextFlow(new Text(message));
         if (isUser) {
