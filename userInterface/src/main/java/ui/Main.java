@@ -11,11 +11,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 public class Main extends Application {
 
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static UserInterfaceImpl uiImpl;
 
     @Override
@@ -51,6 +54,12 @@ public class Main extends Application {
         Scene scene = new Scene(root, 600, 800);
         stage.setTitle("Велес");
         stage.setScene(scene);
+
+        stage.setOnCloseRequest(event -> {
+            logger.info("Завершение работы системы");
+            System.exit(0);
+        });
+
         stage.show();
     }
 
