@@ -16,11 +16,10 @@ import java.util.Objects;
 
 public class Main extends Application {
 
-    UserInterfaceImpl uiImpl = new UserInterfaceImpl();
+    private static UserInterfaceImpl uiImpl;
 
     @Override
     public void start(Stage stage) {
-        uiImpl.setMainApp(this);
         BorderPane root = new BorderPane();
 
         VBox chatArea = new VBox();
@@ -36,9 +35,9 @@ public class Main extends Application {
             if (Objects.requireNonNull(event.getCode()) == KeyCode.ENTER) {
                 String userInput = inputArea.getText().trim();
                 if (!userInput.isEmpty()) {
-                    addMessage(chatArea, userInput, true); // Сообщение пользователя
+                    addMessage(chatArea, userInput, true);
                     inputArea.clear();
-                    uiImpl.setInput(userInput); // Уведомляем UserInterfaceImpl
+                    uiImpl.setInput(userInput);
                 }
                 event.consume();
             }
@@ -83,5 +82,9 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static void setUiImpl(UserInterfaceImpl uiImpl) {
+        Main.uiImpl = uiImpl;
     }
 }
