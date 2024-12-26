@@ -1,11 +1,12 @@
 package ui;
 
+import core.AI;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -14,56 +15,40 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
-
 public class Main extends Application {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private static UserInterfaceImpl uiImpl;
+    private final AI veles = new AI();
 
     @Override
     public void start(Stage stage) {
-        BorderPane root = new BorderPane();
+        stage.setTitle("ВЕЛЕС Чат");
+        VBox layout = new VBox();
 
-        VBox chatArea = new VBox();
-        chatArea.setPadding(new Insets(10));
-        chatArea.setSpacing(10);
+        ListView<String> chatHistory = new ListView<>();
+        TextField inputField = new TextField();
+        Button sendButton = new Button("Отправить");
 
-        TextArea inputArea = new TextArea();
-        inputArea.setPromptText("Введите текст...");
-        inputArea.setWrapText(true); // Включить перенос текста по словам
-        inputArea.setPrefRowCount(5);
+        sendButton.setOnAction(event -> {
+            String input = inputField.getText();
 
-        inputArea.setOnKeyPressed(event -> {
-            if (Objects.requireNonNull(event.getCode()) == KeyCode.ENTER) {
-                String userInput = inputArea.getText().trim();
-                if (!userInput.isEmpty()) {
-                    addMessage(chatArea, userInput, true);
-                    inputArea.clear();
-                    uiImpl.setInput(userInput);
-                }
-                event.consume();
+            if (!input.isEmpty()) {
+                chatHistory.getItems().add(input);
+                inputField.clear();
+
+                String answer = veles.processInput(input);
+                chatHistory.getItems().add(answer);
             }
         });
 
-        // Добавляем элементы в корневой контейнер
-        root.setCenter(chatArea);
-        root.setBottom(inputArea);
-        BorderPane.setMargin(inputArea, new Insets(10, 10, 10, 10));
+        layout.getChildren().addAll(chatHistory, inputField, sendButton);
 
-        Scene scene = new Scene(root, 600, 800);
-        stage.setTitle("Велес");
+        Scene scene = new Scene(layout, 400, 500);
         stage.setScene(scene);
-
-        stage.setOnCloseRequest(event -> {
-            logger.info("Завершение работы системы");
-            System.exit(0);
-        });
-
         stage.show();
     }
 
-    public void addMessage(VBox chatArea, String message, boolean isUser) {
+    public static void addMessage(VBox chatArea, String message, boolean isUser) {
         // Создаем текстовое сообщение
         TextFlow messageBubble = new TextFlow(new Text(message));
         if (isUser) {
@@ -91,9 +76,5 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public static void setUiImpl(UserInterfaceImpl uiImpl) {
-        Main.uiImpl = uiImpl;
     }
 }
