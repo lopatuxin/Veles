@@ -2,6 +2,9 @@ package util;
 
 public class Decoder {
 
+    private Decoder() {
+    }
+
     public static String interpretOutput(double[] outputVector) {
         String[] partsOfSpeech = {"существительное", "прилагательное", "глагол", "наречие", "числительное", "местоимение",
                 "причастие", "деепричастие", "предлог", "союз", "частица", "междометие"};

@@ -26,8 +26,6 @@ public class AI {
 
         return processSpeechPart(tokens);
 
-//        List<Entity> entities = repository.processTokens(tokens);
-//        entities.forEach(entity -> logger.debug("Обработанная сущность: {}", entity));
     }
 
     private String processSpeechPart(List<String> tokens) {

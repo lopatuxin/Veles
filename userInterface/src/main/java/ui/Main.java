@@ -4,70 +4,84 @@ import core.AI;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
 
 public class Main extends Application {
-
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private final AI veles = new AI();
 
     @Override
     public void start(Stage stage) {
-        stage.setTitle("ВЕЛЕС Чат");
+        BorderPane root = new BorderPane();
+
         VBox layout = new VBox();
+        layout.setPadding(new Insets(10));
+        layout.setSpacing(10);
 
         ListView<String> chatHistory = new ListView<>();
-        TextField inputField = new TextField();
-        Button sendButton = new Button("Отправить");
+        TextArea inputField = new TextArea();
+        inputField.setPromptText("Введите текст...");
+        inputField.setWrapText(true);
+        inputField.setPrefRowCount(5);
 
-        sendButton.setOnAction(event -> {
-            String input = inputField.getText();
+        VBox.setVgrow(chatHistory, javafx.scene.layout.Priority.ALWAYS);
 
-            if (!input.isEmpty()) {
-                chatHistory.getItems().add(input);
-                inputField.clear();
+        inputField.setOnKeyPressed(event -> {
+            if (Objects.requireNonNull(event.getCode()) == KeyCode.ENTER) {
+                String input = inputField.getText().trim();
 
-                String answer = veles.processInput(input);
-                chatHistory.getItems().add(answer);
+                if (!input.isEmpty()) {
+                    addMessage(layout, input, true);
+                    inputField.clear();
+
+                    String answer = veles.processInput(input);
+                    addMessage(layout, answer, false);
+                }
             }
         });
 
-        layout.getChildren().addAll(chatHistory, inputField, sendButton);
+        root.setCenter(layout);
+        root.setBottom(inputField);
+        BorderPane.setMargin(inputField, new Insets(10, 10, 10, 10));
 
-        Scene scene = new Scene(layout, 400, 500);
+        Scene scene = new Scene(root, 600, 800);
+        stage.setTitle("Велес");
         stage.setScene(scene);
         stage.show();
     }
 
     public static void addMessage(VBox chatArea, String message, boolean isUser) {
-        // Создаем текстовое сообщение
-        TextFlow messageBubble = new TextFlow(new Text(message));
-        if (isUser) {
-            messageBubble.setStyle("-fx-background-color: #4a90e2; -fx-text-fill: white; -fx-padding: 10; -fx-background-radius: 10;");
-        } else {
-            messageBubble.setStyle("-fx-background-color: #4a4a4a; -fx-text-fill: white; -fx-padding: 10; -fx-background-radius: 10;");
-        }
+        Text text = new Text(message);
+        TextFlow messageBubble = new TextFlow(text);
+        messageBubble.setPadding(new Insets(10));
         messageBubble.setMaxWidth(300);
+
+        // Задаем стили для сообщений пользователя и Велеса
+        if (isUser) {
+            messageBubble.setStyle("-fx-background-color: #4a90e2; -fx-text-fill: white; -fx-background-radius: 10;");
+            text.setFill(javafx.scene.paint.Color.WHITE);
+        } else {
+            messageBubble.setStyle("-fx-background-color: #4a4a4a; -fx-text-fill: white; -fx-background-radius: 10;");
+            text.setFill(javafx.scene.paint.Color.WHITE);
+        }
 
         // Оборачиваем сообщение в HBox для управления выравниванием
         HBox messageContainer = new HBox(messageBubble);
         if (isUser) {
-            messageContainer.setStyle("-fx-padding: 5;"); // Отступы между сообщениями
-            HBox.setMargin(messageBubble, new Insets(5, 10, 5, 50)); // Отступы для пользователя
-            messageContainer.setAlignment(javafx.geometry.Pos.CENTER_LEFT); // Выравнивание влево
+            messageContainer.setAlignment(javafx.geometry.Pos.CENTER_LEFT); // Пользовательские сообщения влево
+            HBox.setMargin(messageBubble, new Insets(5, 50, 5, 10)); // Отступы
         } else {
-            messageContainer.setStyle("-fx-padding: 5;");
-            HBox.setMargin(messageBubble, new Insets(5, 50, 5, 10)); // Отступы для Велеса
-            messageContainer.setAlignment(javafx.geometry.Pos.CENTER_RIGHT); // Выравнивание вправо
+            messageContainer.setAlignment(javafx.geometry.Pos.CENTER_RIGHT); // Сообщения Велеса вправо
+            HBox.setMargin(messageBubble, new Insets(5, 10, 5, 50)); // Отступы
         }
 
         // Добавляем контейнер сообщения в чат

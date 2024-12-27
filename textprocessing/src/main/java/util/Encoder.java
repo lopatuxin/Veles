@@ -2,6 +2,9 @@ package util;
 
 public class Encoder {
 
+    private Encoder() {
+    }
+
     public static double[] encodeWord(String word) {
         double[] vector = new double[33];
         int a = 'а';
